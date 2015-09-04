@@ -2,6 +2,34 @@
 
 class SV_Utils_Install
 {
+    public static function updateXenEsMapping(array $requireIndexing, array $mappings)
+    {
+        if (XenForo_Application::get('options')->enableElasticsearch && $XenEs = XenForo_Model::create('XenES_Model_Elasticsearch'))
+        {
+            $optimizable = $XenEs->getOptimizableMappings();
+            foreach ($optimizable AS $type)
+            {
+                if (isset($mappings[$type]))
+                {
+                    $XenEs->optimizeMapping($type, false, $mappings[$type]);
+                    $requireIndexing[$type] = true;
+                    break;
+                }
+            }
+        }
+
+        if($requireIndexing)
+        {
+            $types = array();
+            foreach($requireIndexing as $type => $null)
+            {
+                $types[] = new XenForo_Phrase($type);
+            }
+
+            XenForo_Error::logException(new Exception("Please rebuild the search index for the content types: " . implode(', ', $types) ), false);
+        }
+    }
+
     public static function removeOldAddons($addonsToUninstall)
     {
         $options = XenForo_Application::getOptions();
