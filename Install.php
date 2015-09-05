@@ -2,18 +2,83 @@
 
 class SV_Utils_Install
 {
+    protected static function _verifyMapping($actualMappingObj, array $expectedMapping)
+    {
+        foreach ($expectedMapping AS $name => $value)
+        {
+            if (!isset($actualMappingObj->$name))
+            {
+                return true;
+            }
+
+            if (is_array($value))
+            {
+                if (self::_verifyMapping($actualMappingObj->$name, $value))
+                {
+                    return true;
+                }
+            }
+            else if ($value === 'yes')
+            {
+                if ($actualMappingObj->$name !== true && $actualMappingObj->$name !== 'yes')
+                {
+                    return true;
+                }
+            }
+            else if ($value === 'no')
+            {
+                if ($actualMappingObj->$name !== false && $actualMappingObj->$name !== 'no')
+                {
+                    return true;
+                }
+            }
+            else if ($actualMappingObj->$name !== $value)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+	public static function getOptimizableMappings(XenES_Model_Elasticsearch $XenEs, array $mappingTypes)
+	{
+		$mappings = $XenEs->getMappings();
+
+		$optimizable = array();
+
+		foreach ($mappingTypes AS $type => $extra)
+		{
+			if (!$mappings || !isset($mappings->$type)) // no index or no mapping
+			{
+				$optimize = true;
+			}
+			else
+			{
+                $mapping = XenForo_Application::mapMerge(XenES_Model_Elasticsearch::$optimizedGenericMapping, $extra);
+				$optimize = self::_verifyMapping($mappings->$type, $mapping);
+			}
+
+			if ($optimize)
+			{
+				$optimizable[] = $type;
+			}
+		}
+
+		return $optimizable;
+	}
+
     public static function updateXenEsMapping(array $requireIndexing, array $mappings)
     {
         if (XenForo_Application::get('options')->enableElasticsearch && $XenEs = XenForo_Model::create('XenES_Model_Elasticsearch'))
         {
-            $optimizable = $XenEs->getOptimizableMappings();
+            $optimizable = self::getOptimizableMappings($XenEs, $mappings);
             foreach ($optimizable AS $type)
             {
                 if (isset($mappings[$type]))
                 {
                     $XenEs->optimizeMapping($type, false, $mappings[$type]);
                     $requireIndexing[$type] = true;
-                    break;
                 }
             }
         }
