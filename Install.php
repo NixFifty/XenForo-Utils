@@ -1,4 +1,10 @@
 <?php
+/*
+ * Standardized utilities that XenForo Addons use.
+ * https://github.com/Xon/XenForo-Utils
+ * Original code copyright 2015 Xon
+ * Released under the MIT license.
+ */
 
 class SV_Utils_Install
 {
@@ -140,7 +146,9 @@ class SV_Utils_Install
         if($hasColumn)
         {
             $db->query('ALTER TABLE `'.$table.'` MODIFY COLUMN `'.$column.'` '.$definition);
+            return true;
         }
+        return false;
     }
 
     public static function dropColumn($table, $column)
@@ -149,7 +157,9 @@ class SV_Utils_Install
         if ($db->fetchRow('SHOW COLUMNS FROM `'.$table.'` WHERE Field = ?', $column))
         {
             $db->query('ALTER TABLE `'.$table.'` drop COLUMN `'.$column.'` ');
+            return true;
         }
+        return false;
     }
 
     public static function addColumn($table, $column, $definition)
@@ -158,7 +168,9 @@ class SV_Utils_Install
         if (!$db->fetchRow('SHOW COLUMNS FROM `'.$table.'` WHERE Field = ?', $column))
         {
             $db->query('ALTER TABLE `'.$table.'` ADD COLUMN `'.$column.'` '.$definition);
+            return true;
         }
+        return false;
     }
 
     public static function addIndex($table, $index, array $columns)
@@ -168,7 +180,9 @@ class SV_Utils_Install
         {
             $cols = '(`'. implode('`,`', $columns). '`)';
             $db->query('ALTER TABLE `'.$table.'` add index `'.$index.'` '. $cols);
+            return true;
         }
+        return false;
     }
 
     public static function dropIndex($table, $index)
@@ -177,7 +191,9 @@ class SV_Utils_Install
         if ($db->fetchRow('SHOW INDEX FROM `'.$table.'` WHERE Key_name = ?', $index))
         {
             $db->query('ALTER TABLE `'.$table.'` drop index `'.$index.'` ');
+            return true;
         }
+        return false;
     }
 
     public static function renameColumn($table, $old_name, $new_name, $definition)
@@ -187,6 +203,8 @@ class SV_Utils_Install
             !$db->fetchRow('SHOW COLUMNS FROM `'.$table.'` WHERE Field = ?', $new_name))
         {
             $db->query('ALTER TABLE `'.$table.'` CHANGE COLUMN `'.$old_name.'` `'.$new_name.'` '. $definition);
+            return true;
         }
+        return false;
     }
 }
