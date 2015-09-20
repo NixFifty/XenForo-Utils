@@ -47,32 +47,32 @@ class SV_Utils_Install
         return false;
     }
 
-	public static function getOptimizableMappings(XenES_Model_Elasticsearch $XenEs, array $mappingTypes)
-	{
-		$mappings = $XenEs->getMappings();
+    public static function getOptimizableMappings(XenES_Model_Elasticsearch $XenEs, array $mappingTypes)
+    {
+        $mappings = $XenEs->getMappings();
 
-		$optimizable = array();
+        $optimizable = array();
 
-		foreach ($mappingTypes AS $type => $extra)
-		{
-			if (!$mappings || !isset($mappings->$type)) // no index or no mapping
-			{
-				$optimize = true;
-			}
-			else
-			{
+        foreach ($mappingTypes AS $type => $extra)
+        {
+            if (!$mappings || !isset($mappings->$type)) // no index or no mapping
+            {
+                $optimize = true;
+            }
+            else
+            {
                 $mapping = XenForo_Application::mapMerge(XenES_Model_Elasticsearch::$optimizedGenericMapping, $extra);
-				$optimize = self::_verifyMapping($mappings->$type, $mapping);
-			}
+                $optimize = self::_verifyMapping($mappings->$type, $mapping);
+            }
 
-			if ($optimize)
-			{
-				$optimizable[] = $type;
-			}
-		}
+            if ($optimize)
+            {
+                $optimizable[] = $type;
+            }
+        }
 
-		return $optimizable;
-	}
+        return $optimizable;
+    }
 
     public static function updateXenEsMapping(array $requireIndexing, array $mappings)
     {
