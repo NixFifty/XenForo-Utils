@@ -119,7 +119,7 @@ class SV_Utils_Install
                     if ($dw->setExistingData($new))
                     {
                         $dw->set('option_value', $val);
-                        return $dw->save();
+                        $dw->save();
                     }
                 }
 
