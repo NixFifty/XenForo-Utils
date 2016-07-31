@@ -2,12 +2,8 @@
 
 class SV_Utils_Deferred_Search extends XenForo_Deferred_Abstract
 {
-    public static function SchemaUpdates($requireIndexing)
+    public static function SchemaUpdates(array $requireIndexing = null)
     {
-        if (empty($requireIndexing))
-        {
-            return;
-        }
         if (XenForo_Application::getOptions()->enableElasticsearch && $XenEs = XenForo_Model::create('XenES_Model_Elasticsearch'))
         {
 
