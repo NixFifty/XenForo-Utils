@@ -8,11 +8,12 @@
 
 class SV_Utils_AddOn
 {
-    public static function addOnIsActive($addOnId)
+    public static function addOnIsActive($addOnId, $versionid = 0)
     {
         if (XenForo_Application::isRegistered('addOns')) 
         {
-            return array_key_exists($addOnId, XenForo_Application::get('addOns'));
+            $addons = XenForo_Application::get('addOns');
+            return isset($addons[$addOnId]) && $addons[$addOnId] >= $versionid;
         }
         return false;
     }
