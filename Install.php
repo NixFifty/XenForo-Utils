@@ -103,7 +103,7 @@ class SV_Utils_Install
 
     public static function removeOldAddons($addonsToUninstall)
     {
-        SV_Utils_Addon::removeOldAddOns($addonsToUninstall, false);
+        SV_Utils_AddOn::removeOldAddOns($addonsToUninstall, false);
     }
 
     public static function modifyColumn($table, $column, $oldDefinition, $definition)
