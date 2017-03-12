@@ -1,6 +1,6 @@
 <?php
 
-class SV_Utils_Deferred_Search extends XenForo_Deferred_Abstract
+class NixFifty_Utils_Deferred_Search extends XenForo_Deferred_Abstract
 {
     public static function SchemaUpdates(array $requireIndexing = null)
     {

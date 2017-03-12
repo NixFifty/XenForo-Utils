@@ -6,7 +6,7 @@
  * Released under the MIT license.
  */
 
-class SV_Utils_Install
+class NixFifty_Utils_Install
 {
     protected static function _verifyMapping($actualMappingObj, array $expectedMapping)
     {
@@ -103,7 +103,7 @@ class SV_Utils_Install
 
     public static function removeOldAddons($addonsToUninstall)
     {
-        SV_Utils_AddOn::removeOldAddOns($addonsToUninstall, false);
+        NixFifty_Utils_AddOn::removeOldAddOns($addonsToUninstall, false);
     }
 
     public static function modifyColumn($table, $column, $oldDefinition, $definition)

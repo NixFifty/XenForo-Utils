@@ -6,7 +6,7 @@
  * Released under the MIT license.
  */
 
-class SV_Utils_AddOn
+class NixFifty_Utils_AddOn
 {
     public static function addOnIsActive($addOnId, $versionid = 0)
     {
